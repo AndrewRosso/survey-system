@@ -1,8 +1,13 @@
 package ru.andrewrosso.surveysystem.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Date;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "SURVEY")
 public class Survey {
@@ -26,44 +31,13 @@ public class Survey {
     @Column(name = "Description", nullable = false)
     private String descripton;
 
-
-    public int getId() {
-        return id;
+    public Survey() {
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Survey(String name, Date startDate, Date endDate, String descripton) {
         this.name = name;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
         this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public String getDescripton() {
-        return descripton;
-    }
-
-    public void setDescripton(String descripton) {
         this.descripton = descripton;
     }
 }
