@@ -21,7 +21,7 @@ public class AdminApiController {
     }
 
     @GetMapping("/surveys")
-    public List<Survey> listOfSurvey() {
+    public List<Survey> getAllSurvey() {
         if (surveyService.findAll() == null) {
             throw new ResourceNotFoundException();
         }

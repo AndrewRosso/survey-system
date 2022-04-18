@@ -1,6 +1,7 @@
 package ru.andrewrosso.surveysystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,10 @@ public class UserApiController {
     }
 
     @GetMapping()
-    public List<Survey> listOfSurvey(){
+    public List<Survey> getAllSurvey() {
+        if (surveyService.findAll() == null) {
+            throw new ResourceNotFoundException();
+        }
         return surveyService.findAll();
     }
 }
