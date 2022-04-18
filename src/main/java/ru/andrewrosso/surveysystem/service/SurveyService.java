@@ -8,6 +8,10 @@ import java.util.List;
 @Service
 public interface SurveyService {
     List<Survey> findAll();
-    Survey save(Survey survey);
-    void delete(int id);
+
+    Survey findById(int id);
+
+    Survey add(Survey survey);
+
+    void deleteById(int id);
 }

@@ -1,5 +1,6 @@
 package ru.andrewrosso.surveysystem.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "SURVEY")
 public class Survey {
@@ -29,15 +31,15 @@ public class Survey {
     private Date endDate;
 
     @Column(name = "Description", nullable = false)
-    private String descripton;
+    private String description;
 
     public Survey() {
     }
 
-    public Survey(String name, Date startDate, Date endDate, String descripton) {
+    public Survey(String name, Date startDate, Date endDate, String description) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.descripton = descripton;
+        this.description = description;
     }
 }
