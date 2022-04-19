@@ -7,6 +7,7 @@ import ru.andrewrosso.surveysystem.repository.SurveyRepository;
 import ru.andrewrosso.surveysystem.service.SurveyService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SurveyServiceImpl implements SurveyService {
@@ -25,7 +26,8 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public Survey findById(int id) {
-        return surveyRepository.findById(id);
+        Optional<Survey> surveyOptional = surveyRepository.findById(id);
+        return surveyOptional.orElse(null);
     }
 
     @Override

@@ -37,9 +37,9 @@ public class AdminApiController {
     }
 
     @PostMapping("/surveys")
-    public ResponseEntity<Survey> addSurvey(@RequestBody Survey survey) {
-        Survey s = surveyService.add(survey);
-        return ResponseEntity.status(201).body(s);
+    public ResponseEntity<Survey> addSurvey(@RequestBody Survey newSurvey) {
+        Survey addedSurvey = surveyService.add(newSurvey);
+        return ResponseEntity.status(201).body(addedSurvey);
     }
 
     @PutMapping("/surveys/{id}")
@@ -62,5 +62,7 @@ public class AdminApiController {
         }
         surveyService.deleteById(id);
     }
+
+
 
 }
