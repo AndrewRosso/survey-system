@@ -7,3 +7,5 @@ INSERT INTO QUESTION (id, content, type, survey_id)
 VALUES (1,'Какие увлечения больше нравятся: активные или неактивные', 'ONEOPTION',1);
 INSERT INTO QUESTION (id, content, type, survey_id)
 VALUES (2,'Выберите что больше по душе: лыжи или сноуборд', 'ONEOPTION',1);
+INSERT INTO QUESTION (id, content, type, survey_id)
+VALUES (3,'Выберите что больше по душе: Lada или Renault', 'ONEOPTION',2);
