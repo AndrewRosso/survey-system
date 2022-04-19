@@ -23,7 +23,7 @@ public class Survey {
     private String name;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "Start_Date", nullable = false)
+    @Column(name = "Start_Date", nullable = false, updatable = false)
     private Date startDate;
 
     @Temporal(TemporalType.DATE)
