@@ -9,7 +9,7 @@ import java.util.List;
 public interface QuestionService {
     List<Question> findAll(int surveyId);
 
-    Question findById(int id);
+    Question findById(int surveyId, int questionId);
 
     Question add(Question question);
 

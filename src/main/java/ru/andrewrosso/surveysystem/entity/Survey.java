@@ -1,45 +1,37 @@
 package ru.andrewrosso.surveysystem.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "SURVEY")
+@Builder //- для создания объектов
 public class Survey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id", nullable = false)
+    @Column(name = "ID", nullable = false)
     private int id;
 
-    @Column(name = "Name", length = 64, nullable = false)
+    @Column(name = "NAME", length = 64, nullable = false)
     private String name;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "Start_Date", nullable = false, updatable = false)
+    @Column(name = "START_DATE", nullable = false, updatable = false)
     private Date startDate;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "End_Date", nullable = false)
+    @Column(name = "END_DATE", nullable = false)
     private Date endDate;
 
-    @Column(name = "Description", nullable = false)
+    @Column(name = "DESCRIPTION", nullable = false)
     private String description;
-
-    public Survey() {
-    }
-
-    public Survey(String name, Date startDate, Date endDate, String description) {
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.description = description;
-    }
 }

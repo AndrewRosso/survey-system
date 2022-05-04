@@ -1,4 +1,4 @@
-package ru.andrewrosso.surveysystem;
+package ru.andrewrosso.surveysystem.controller;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,13 +7,14 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.andrewrosso.surveysystem.controller.UserApiController;
 import ru.andrewrosso.surveysystem.entity.Survey;
+import ru.andrewrosso.surveysystem.repository.UserRepository;
 import ru.andrewrosso.surveysystem.service.SurveyService;
 
 import java.sql.Date;
@@ -30,22 +31,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private SurveyService surveyService;
+    @MockBean
+    private UserRepository userRepository;
 
-    Survey testSurvey1 = new Survey(
-            1,
-            "Про учебу",
-            Date.valueOf("2022-04-17"),
-            Date.valueOf("2022-06-17"),
-            "тестовое описание");
-    Survey testSurvey2 = new Survey(
-            2,
-            "Про увлечения",
-            Date.valueOf("2022-04-17"),
-            Date.valueOf("2022-06-17"),
-            "тестовое описание");
+    Survey testSurvey1 = Survey.builder()
+            .id(1)
+            .name("Про учебу")
+            .startDate(Date.valueOf("2022-04-17"))
+            .endDate(Date.valueOf("2022-06-17"))
+            .description("тестовое описание")
+            .build();
+    Survey testSurvey2 = Survey.builder()
+            .id(2)
+            .name("Про увлечения")
+            .startDate(Date.valueOf("2022-04-17"))
+            .endDate(Date.valueOf("2022-06-17"))
+            .description("тестовое описание")
+            .build();
 
     List<Survey> testSurveys = Arrays.asList(testSurvey1, testSurvey2);
     List<Survey> nullSurveys = null;
@@ -57,7 +61,6 @@ public class UserApiControllerTest {
 
     @Test
     public void shouldGetAllSurveys() throws Exception {
-
         Mockito.when(surveyService.findAll()).thenReturn(testSurveys);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -72,8 +75,7 @@ public class UserApiControllerTest {
 
     @Test
     public void shouldGetStatus404WhenSurveysIsNull() throws Exception {
-
-        Mockito.when(surveyService.findAll()).thenReturn(nullSurveys);
+        Mockito.when(surveyService.findAll()).thenThrow(new ResourceNotFoundException());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/surveys")

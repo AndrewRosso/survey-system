@@ -1,4 +1,4 @@
-package ru.andrewrosso.surveysystem;
+package ru.andrewrosso.surveysystem.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.andrewrosso.surveysystem.controller.AdminApiController;
 import ru.andrewrosso.surveysystem.entity.Survey;
 import ru.andrewrosso.surveysystem.service.SurveyService;
 
@@ -32,42 +32,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AdminApiController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class AdminApiControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @MockBean
     private SurveyService surveyService;
 
-
-    Survey testSurvey1 = new Survey(
-            1,
-            "Про учебу",
-            Date.valueOf("2022-04-17"),
-            Date.valueOf("2022-06-17"),
-            "тестовое описание");
-    Survey testSurvey2 = new Survey(
-            2,
-            "Про увлечения",
-            Date.valueOf("2022-04-17"),
-            Date.valueOf("2022-06-17"),
-            "тестовое описание");
-    Survey testNewSurvey = new Survey(
-            3,
-            "Про новый опрос",
-            Date.valueOf("2022-04-17"),
-            Date.valueOf("2022-06-17"),
-            "тестовое описание");
-    Survey testUpdateSurvey = new Survey(
-            4,
-            "Про измененный опрос",
-            Date.valueOf("2022-04-17"),
-            Date.valueOf("2022-06-17"),
-            "тестовое описание");
-
+    Survey testSurvey1 = Survey.builder()
+            .id(1)
+            .name("Про учебу")
+            .startDate(Date.valueOf("2022-04-17"))
+            .endDate(Date.valueOf("2022-06-17"))
+            .description("тестовое описание")
+            .build();
+    Survey testSurvey2 = Survey.builder()
+            .id(2)
+            .name("Про увлечения")
+            .startDate(Date.valueOf("2022-04-17"))
+            .endDate(Date.valueOf("2022-06-17"))
+            .description("тестовое описание")
+            .build();
+    Survey testNewSurvey = Survey.builder()
+            .id(3)
+            .name("Про новый опрос")
+            .startDate(Date.valueOf("2022-04-17"))
+            .endDate(Date.valueOf("2022-06-17"))
+            .description("тестовое описание")
+            .build();
+    Survey testUpdateSurvey = Survey.builder()
+            .id(4)
+            .name("Про измененный опрос")
+            .startDate(Date.valueOf("2022-04-17"))
+            .endDate(Date.valueOf("2022-06-17"))
+            .description("тестовое описание")
+            .build();
     List<Survey> testSurveys = Arrays.asList(testSurvey1, testSurvey2);
 
     @Test
@@ -77,7 +76,6 @@ public class AdminApiControllerTest {
 
     @Test
     public void shouldGetAllSurveys() throws Exception {
-
         Mockito.when(surveyService.findAll()).thenReturn(testSurveys);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -90,10 +88,9 @@ public class AdminApiControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", is(2)));
     }
 
-    @Test
+    @Test // бесполезный тест?
     public void shouldGetStatus404WhenSurveysIsNullWhenTryGetAllSurveys() throws Exception {
-
-        Mockito.when(surveyService.findAll()).thenReturn(null);
+        Mockito.when(surveyService.findAll()).thenThrow(new ResourceNotFoundException());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/admin/surveys")
@@ -113,9 +110,9 @@ public class AdminApiControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void shouldGetStatus404WhenSurveyIsNullWhenTryGetSurveyById() throws Exception {
-        Mockito.when(surveyService.findById(Mockito.anyInt())).thenReturn(null);
+    @Test // бесполезный тест?
+    public void shouldGetStatus404WhenSurveyIsNotFoundWhenTryGetSurveyById() throws Exception {
+        Mockito.when(surveyService.findById(Mockito.anyInt())).thenThrow(new ResourceNotFoundException());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/admin/surveys/{id}", 2)
@@ -126,7 +123,6 @@ public class AdminApiControllerTest {
 
     @Test
     public void shouldAddNewSurveyAndGetStatus201() throws Exception {
-
         Mockito.when(surveyService.add(Mockito.any())).thenReturn(testNewSurvey);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -140,7 +136,6 @@ public class AdminApiControllerTest {
 
     @Test
     public void shouldUpdateSurvey() throws Exception {
-
         testUpdateSurvey.setId(testSurvey1.getId());
 
         Mockito.when(surveyService.findById(testSurvey1.getId())).thenReturn(testSurvey1);
@@ -156,10 +151,9 @@ public class AdminApiControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", is("Про измененный опрос")));
     }
 
-    @Test
+    @Test // бесполезный тест?
     public void shouldGetStatus404WhenUpdatableSurveyIsNull() throws Exception {
-
-        Mockito.when(surveyService.findById(Mockito.anyInt())).thenReturn(null);
+        Mockito.when(surveyService.findById(Mockito.anyInt())).thenThrow(new ResourceNotFoundException());
         Mockito.when(surveyService.add(Mockito.any())).thenReturn(testUpdateSurvey);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -170,11 +164,10 @@ public class AdminApiControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
+    @Test //бесполезный тест?
     public void shouldGetStatus400WhenUpdatedContentIsNull() throws Exception {
-
         Mockito.when(surveyService.findById(Mockito.anyInt())).thenReturn(testSurvey1);
-        Mockito.when(surveyService.add(Mockito.any())).thenReturn(null);
+        Mockito.when(surveyService.add(Mockito.any())).thenThrow(new NullPointerException());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/api/admin/surveys/{id}", 2)
@@ -186,7 +179,6 @@ public class AdminApiControllerTest {
 
     @Test
     public void shouldDeleteSurveyByIdAndGetStatus200() throws Exception {
-
         Mockito.when(surveyService.findById(Mockito.anyInt())).thenReturn(testSurvey1);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -196,10 +188,9 @@ public class AdminApiControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
+    @Test //
     public void shouldGetStatus404WhenBeingDeletedSurveyIsNotFound() throws Exception {
-
-        Mockito.when(surveyService.findById(Mockito.anyInt())).thenReturn(null);
+        Mockito.when(surveyService.findById(Mockito.anyInt())).thenThrow(new ResourceNotFoundException());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/admin/surveys/{id}", 1)

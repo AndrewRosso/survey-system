@@ -1,42 +1,31 @@
 package ru.andrewrosso.surveysystem.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.andrewrosso.surveysystem.entity.enums.QuestionType;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "QUESTION")
+@Builder
 public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id", nullable = false)
+    @Column(name = "ID", nullable = false)
     private int id;
 
-    @Column(name = "Content", nullable = false)
+    @Column(name = "CONTENT", nullable = false)
     private String content;
 
-    @Column(name = "Type", nullable = false)
+    @Column(name = "TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private QuestionType type;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "survey_id", nullable = false)
+    @JoinColumn(name = "SURVEY_ID", nullable = false)
     private Survey survey;
-
-    public Question() {
-    }
-
-    public Question(String content, QuestionType type, Survey survey) {
-        this.content = content;
-        this.type = type;
-        this.survey = survey;
-    }
 }
